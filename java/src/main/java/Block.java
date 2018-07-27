@@ -49,11 +49,12 @@ public class Block {
     }
 
         public void finalizeBlock() {
-        if (this.hash.isEmpty()) {
+//        if (this.hash.equalsIgnoreCase("")) {
+//
+//        } else {
+//            throw new IllegalArgumentException("Block is already finalized");
+//        }
             this.hash = hashBlock();
-        } else {
-            throw new IllegalArgumentException("Block is already finalized");
-        }
 
     }
 
@@ -65,10 +66,9 @@ public class Block {
 
          */
         String  currentHash = "";
-        //TODO for loop
         for (Iterator txn = transactions.iterator(); txn.hasNext(); ) {
             Transaction curr_txn = (Transaction) txn.next();
-            //TODO calculate hash of transaction
+            currentHash = HashHelper.hashMessage((currentHash + curr_txn.toString()).getBytes());
         }
         return currentHash;
     }
@@ -87,14 +87,21 @@ public class Block {
         3. Calculate the hash of
         blockhash = hash( transaction + blockheader)
          */
-        String blockHash = "HASH";
-        String transactionsHash = this.hashTransactions();
+
+        String blockHash = HashHelper.hashMessage((new BlockHeader.BlockHeaderBuilder()
+                .setPayloadHash(this.hashTransactions())
+                .setPrevHash(this.getPrev_hash())
+                .setTimestamp(this.when.toString())
+                .setTotalTransactions(this.getTransactionCount())
+                .build()
+                .toString() + this.hashTransactions()).getBytes());
+
         return blockHash;
 
     }
 
     public boolean validate(){
-        return false;
+        return this.hashBlock().equalsIgnoreCase(this.hash);
     }
 
     @Override

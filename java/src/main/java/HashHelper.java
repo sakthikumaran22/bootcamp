@@ -3,7 +3,8 @@ import org.bouncycastle.util.encoders.Hex;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashHelper {
+public class
+HashHelper {
     public static String hashMessage(byte[] msg) {
         MessageDigest md;
         try {

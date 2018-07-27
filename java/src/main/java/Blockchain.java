@@ -15,8 +15,11 @@ public class Blockchain {
         return (Block) this.blockchain.get(blockchain.size()-1);
     }
 
+    public List<Block> getBlockChain(){
+        return this.blockchain;
+    }
     public boolean validateChain(){
-        return false;
+        boolean isValid = true;
 
         //TODO implement this,
         /*
@@ -25,6 +28,21 @@ public class Blockchain {
         of previous block
         block.prev_hash == previous_block.hash
          */
+        String prevBlockHash = null;
+        for(Block block: this.getBlockChain()){
+            if(block.validate()) {
+                if (block.getPrev_hash() != null) {
+                    continue;
+                } else {
+                    if (!block.getHash().equalsIgnoreCase(prevBlockHash))
+                        return false;
+                }
+                prevBlockHash = block.getHash();
+            }
+            else
+                return false;
+        }
+        return isValid;
     }
 
     @Override
@@ -62,5 +80,17 @@ public class Blockchain {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] strings){
+        Block block = new Block();
+        Blockchain blockChain = new Blockchain();
+        for(int i=0;i<5;i++){
+            block.add_transaction(new Transaction("Satheesh", "Jeeva", 10));
+            blockChain.add_blocks(block);
+            block.finalizeBlock();
+            block = new Block(block);
         }
+        blockChain.saveAsJson();
+    }
 }

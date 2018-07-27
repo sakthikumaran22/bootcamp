@@ -44,7 +44,7 @@ public class BlockTest {
         block.finalizeBlock();
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void validate() {
         assertFalse(block.validate());
         assertThat(block.getHash(), is(emptyString()));
